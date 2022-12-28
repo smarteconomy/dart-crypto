@@ -7,6 +7,4 @@ void main() {
   mnemonic = Mnemonic.fromMnemonic(
       "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about");
   print('Mnemonic: $mnemonic');
-
-  mnemonic.rootKeyPair.deriveChildKey(0).deriveChildKey(0).deriveChildKey(0);
 }
