@@ -1,5 +1,4 @@
 import 'package:dart_crypto/dart_crypto.dart';
-import 'package:dart_crypto/src/model/mnemonic.dart';
 import 'package:dart_crypto/src/util/extensions.dart';
 import 'package:pointycastle/export.dart';
 import 'package:test/expect.dart';
@@ -108,7 +107,6 @@ void main() {
     test("Test Derivation with Path", () {
       const mnemonic =
           "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about";
-      final crypto = MnemonicHelper();
       final seed = MnemonicHelper.mnemonicToSeed(mnemonic);
       final extendedRootKey = ExtendedKeyPair.fromSeed(seed);
       //m/0'/0'/0'
