@@ -24,7 +24,7 @@ class ExtendedPublicKey extends ExtendedKey {
   }
 
   @override
-  ExtendedPublicKey derivePublicKey(index) {
+  ExtendedPublicKey derivePublicChildKey(index) {
     final localPublicKey = publicKey.Q;
     final localParameters = publicKey.parameters;
 
@@ -95,7 +95,7 @@ class ExtendedPrivateKey extends ExtendedKey {
   * Private parent key → public child key
   */
   @override
-  ExtendedPublicKey derivePublicKey(index) {
+  ExtendedPublicKey derivePublicChildKey(index) {
     final derivedPublicKey = derivePrivateChildKey(index).toNeuteredKey();
     return derivedPublicKey;
   }
@@ -195,7 +195,7 @@ abstract class ExtendedKey {
 
   String toBase58String({version = 76066276});
 
-  ExtendedPublicKey derivePublicKey(index);
+  ExtendedPublicKey derivePublicChildKey(index);
 
   Uint8List identifier() {
     var hash = SHA256Digest().process(publicKey.Q!.getEncoded());

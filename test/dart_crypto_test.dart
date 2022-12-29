@@ -51,11 +51,25 @@ void main() {
       expect(
           "xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EGMcet8",
           neuteredRootKey.toBase58String());
+      //Public key to public key
+      var derivedFromPublicKey = neuteredRootKey.derivePublicChildKey(0);
+      var derivedFromPrivateKey = extendedRootPrivateKey
+          .derivePrivateChildKey(0, hardened: false)
+          .toNeuteredKey();
 
-      final privateChildKey = extendedRootPrivateKey.derivePrivateChildKey(0);
-      final derivedPublicKey = extendedRootPrivateKey.derivePublicKey(0);
-      expect(privateChildKey.toNeuteredKey().toBase58String(),
-          derivedPublicKey.toBase58String());
+      expect(derivedFromPrivateKey.toBase58String(),
+          derivedFromPublicKey.toBase58String());
+
+      derivedFromPublicKey =
+          neuteredRootKey.derivePublicChildKey(0).derivePublicChildKey(0);
+
+      derivedFromPrivateKey = extendedRootPrivateKey
+          .derivePrivateChildKey(0, hardened: false)
+          .derivePrivateChildKey(0, hardened: false)
+          .toNeuteredKey();
+
+      print(derivedFromPublicKey.toBase58String());
+      print(derivedFromPrivateKey.toBase58String());
     });
 
     test("Test Child Key Derivation", () {
