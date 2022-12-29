@@ -1,9 +1,13 @@
+import 'dart:typed_data';
+
+import 'package:convert/convert.dart';
 import 'package:dart_crypto/dart_crypto.dart';
 import 'package:dart_crypto/src/util/extensions.dart';
 import 'package:pointycastle/export.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 import 'assets/bip39_test_vectors.dart';
+import 'assets/bip32_test_vectors.dart';
 
 void main() {
   group("Mnemonic Tests", () {
@@ -26,6 +30,57 @@ void main() {
         expect(entropy.toHexString(), element[0]);
         final seed = MnemonicHelper.mnemonicToSeed(mnemonic, 'TREZOR');
         expect(seed.toHexString(), element[2]);
+      }
+    });
+
+    test("Bip32 Test Vector1", () {
+      final seed = testVector1['seed'] as String;
+      final rootKey =
+          ExtendedKey.fromSeed(Uint8List.fromList(hex.decode(seed)));
+      final testKeys = testVector1['elements'] as List;
+      for (var element in testKeys) {
+        final path = element['name'];
+        final xpub = element['ext_pub'];
+        final xpriv = element['ext_prv'];
+
+        final derivedKey =
+            rootKey.derivePrivateChildKeyFromPath(path) as ExtendedPrivateKey;
+        expect(derivedKey.toBase58String(), xpriv);
+        expect(derivedKey.toNeuteredKey().toBase58String(), xpub);
+      }
+    });
+
+    test("Bip32 Test Vector2", () {
+      final seed = testVector2['seed'] as String;
+      final rootKey =
+          ExtendedKey.fromSeed(Uint8List.fromList(hex.decode(seed)));
+      final testKeys = testVector2['elements'] as List;
+      for (var element in testKeys) {
+        final path = element['name'];
+        final xpub = element['ext_pub'];
+        final xpriv = element['ext_prv'];
+
+        final derivedKey =
+            rootKey.derivePrivateChildKeyFromPath(path) as ExtendedPrivateKey;
+        expect(derivedKey.toBase58String(), xpriv);
+        expect(derivedKey.toNeuteredKey().toBase58String(), xpub);
+      }
+    });
+
+    test("Bip32 Test Vector3", () {
+      final seed = testVector3['seed'] as String;
+      final rootKey =
+          ExtendedKey.fromSeed(Uint8List.fromList(hex.decode(seed)));
+      final testKeys = testVector3['elements'] as List;
+      for (var element in testKeys) {
+        final path = element['name'];
+        final xpub = element['ext_pub'];
+        final xpriv = element['ext_prv'];
+
+        final derivedKey =
+            rootKey.derivePrivateChildKeyFromPath(path) as ExtendedPrivateKey;
+        expect(derivedKey.toBase58String(), xpriv);
+        expect(derivedKey.toNeuteredKey().toBase58String(), xpub);
       }
     });
 
