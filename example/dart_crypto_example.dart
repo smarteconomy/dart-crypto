@@ -7,4 +7,7 @@ void main() {
   mnemonic = Mnemonic.fromMnemonic(
       "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about");
   print('Mnemonic: $mnemonic');
+
+  var account = mnemonic.createAccount(0);
+  print('Account: ${account.toBase58String()}');
 }

@@ -173,7 +173,7 @@ abstract class ExtendedKey {
       String curve = "secp256k1",
       int parentFingerprint = 0,
       int depth = 0}) {
-    ECDomainParameters params = ECDomainParameters(curve);
+    final params = ECDomainParameters(curve);
     var hmac = Mac("SHA-512/HMAC");
     hmac.init(KeyParameter(Uint8List.fromList(utf8.encode("Bitcoin seed"))));
     final out = hmac.process(seed);
@@ -220,7 +220,10 @@ abstract class ExtendedKey {
       if (key is ExtendedPrivateKey) {
         key = key.derivePrivateChildKey(index, hardened: hardened);
       } else {
-        throw Exception("Public Key can't derive Private Child key");
+        if (hardened) {
+          throw Exception("Can't derive hardened key from public key");
+        }
+        key = key.derivePublicChildKey(index);
       }
     }
     return key;

@@ -67,9 +67,6 @@ void main() {
           .derivePrivateChildKey(0, hardened: false)
           .derivePrivateChildKey(0, hardened: false)
           .toNeuteredKey();
-
-      print(derivedFromPublicKey.toBase58String());
-      print(derivedFromPrivateKey.toBase58String());
     });
 
     test("Test Child Key Derivation", () {

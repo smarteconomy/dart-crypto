@@ -24,6 +24,11 @@ class Mnemonic {
     return Mnemonic(mnemonic, seed, rootKeyPair);
   }
 
+  ExtendedKey createAccount(int index, {chainId = 0}) {
+    return rootKeyPair
+        .derivePrivateChildKeyFromPath("m/44'/$chainId'/$index'/0");
+  }
+
   @override
   String toString() {
     return 'Keywords: $keywords\n seed: ${hex.encode(seed)}\n rootPrivateKey: ${rootKeyPair.toBase58String()}';
