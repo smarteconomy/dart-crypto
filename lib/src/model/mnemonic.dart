@@ -24,9 +24,10 @@ class Mnemonic {
     return Mnemonic(mnemonic, seed, rootKeyPair);
   }
 
-  ExtendedKey createAccount(int index, {chainId = 0}) {
-    return rootKeyPair
-        .derivePrivateChildKeyFromPath("m/44'/$chainId'/$index'/0");
+  ExtendedKey createAccount(int index,
+      {chainId = 0, external = true, addressIndex = 0}) {
+    return rootKeyPair.deriveChildKeyFromPath(
+        "m/44'/$chainId'/$index'/${external ? 0 : 1}/$addressIndex");
   }
 
   @override

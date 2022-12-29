@@ -252,7 +252,7 @@ abstract class ExtendedKey {
     return hash;
   }
 
-  ExtendedKey derivePrivateChildKeyFromPath(String fullPath) {
+  ExtendedKey deriveChildKeyFromPath(String fullPath) {
     var path = fullPath.split("/");
     var key = this;
     for (var p in path) {

@@ -45,7 +45,7 @@ void main() {
         final xpriv = element['ext_prv'];
 
         final derivedKey =
-            rootKey.derivePrivateChildKeyFromPath(path) as ExtendedPrivateKey;
+            rootKey.deriveChildKeyFromPath(path) as ExtendedPrivateKey;
         expect(derivedKey.toBase58String(), xpriv);
         expect(derivedKey.toNeuteredKey().toBase58String(), xpub);
       }
@@ -62,7 +62,7 @@ void main() {
         final xpriv = element['ext_prv'];
 
         final derivedKey =
-            rootKey.derivePrivateChildKeyFromPath(path) as ExtendedPrivateKey;
+            rootKey.deriveChildKeyFromPath(path) as ExtendedPrivateKey;
         expect(derivedKey.toBase58String(), xpriv);
         expect(derivedKey.toNeuteredKey().toBase58String(), xpub);
       }
@@ -79,7 +79,7 @@ void main() {
         final xpriv = element['ext_prv'];
 
         final derivedKey =
-            rootKey.derivePrivateChildKeyFromPath(path) as ExtendedPrivateKey;
+            rootKey.deriveChildKeyFromPath(path) as ExtendedPrivateKey;
         expect(derivedKey.toBase58String(), xpriv);
         expect(derivedKey.toNeuteredKey().toBase58String(), xpub);
       }
@@ -96,7 +96,7 @@ void main() {
         final xpriv = element['ext_prv'];
 
         final derivedKey =
-            rootKey.derivePrivateChildKeyFromPath(path) as ExtendedPrivateKey;
+            rootKey.deriveChildKeyFromPath(path) as ExtendedPrivateKey;
         expect(derivedKey.toBase58String(), xpriv);
         expect(derivedKey.toNeuteredKey().toBase58String(), xpub);
       }
@@ -297,7 +297,7 @@ void main() {
           "xprv9xirHuqDkUGmnw5eKkdkxZtb5EnFzKtzvHRFvdZCAm2Nnq29U6Cp15NfdnkLNbmsTkqFNgjpbLwdjVemQ7H9cE99sJSQE7NSnKFuNZeQ2xe");
 
       final pathDerivatedKey =
-          extendedRootKey.derivePrivateChildKeyFromPath("m/0'/0'/0'");
+          extendedRootKey.deriveChildKeyFromPath("m/0'/0'/0'");
       expect(childKeyEncoded, pathDerivatedKey.toBase58String());
     });
 
@@ -314,7 +314,7 @@ void main() {
           .derivePrivateChildKey(1);
       final childKeyEncoded = childKey.toBase58String();
       final pathDerivatedKey =
-          extendedRootKey.derivePrivateChildKeyFromPath("m/44'/0'/0'/0/1'");
+          extendedRootKey.deriveChildKeyFromPath("m/44'/0'/0'/0/1'");
       expect(childKeyEncoded, pathDerivatedKey.toBase58String());
     });
   });
