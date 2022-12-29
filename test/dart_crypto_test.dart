@@ -84,6 +84,37 @@ void main() {
       }
     });
 
+    test("Bip32 Test Vector4", () {
+      final seed = testVector4['seed'] as String;
+      final rootKey =
+          ExtendedKey.fromSeed(Uint8List.fromList(hex.decode(seed)));
+      final testKeys = testVector4['elements'] as List;
+      for (var element in testKeys) {
+        final path = element['name'];
+        final xpub = element['ext_pub'];
+        final xpriv = element['ext_prv'];
+
+        final derivedKey =
+            rootKey.derivePrivateChildKeyFromPath(path) as ExtendedPrivateKey;
+        expect(derivedKey.toBase58String(), xpriv);
+        expect(derivedKey.toNeuteredKey().toBase58String(), xpub);
+      }
+    });
+
+    test("Base58 Public Key Decode Tests", () {
+      final publicKey =
+          "xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EGMcet8";
+
+      final decodedPublicKey = ExtendedPublicKey.fromBase58String(publicKey);
+      expect(decodedPublicKey.toBase58String(), publicKey);
+
+      final privateKey =
+          "xprv9s21ZrQH143K3QTDL4LXw2F7HEK3wJUD2nW2nRk4stbPy6cq3jPPqjiChkVvvNKmPGJxWUtg6LnF5kejMRNNU3TGtRBeJgk33yuGBxrMPHi";
+
+      final decodedPrivateKey = ExtendedPrivateKey.fromBase58String(privateKey);
+      expect(decodedPrivateKey.toBase58String(), privateKey);
+    });
+
     test("Test Extend Key", () {
       for (var element in bip39TestVectorsEnglish) {
         //0 = entropy 1 = mnemonic 2 = seed
@@ -157,28 +188,6 @@ void main() {
       encodedDerivedPublicKey = derivedExtendedPublicKey.toBase58String();
       expect(encodedDerivedPublicKey,
           "xpub68Gmy5EVb2BdFbj2LpWrk1M7obNuaPTpT5oh9QCCo5sRfqSHVYWex97WpDZzszdzHzxXDAzPLVSwybe4uPYkSk4G3gnrPqqkV9RyNzAcNJ1");
-
-      // //m/0/0'
-      // derivedExtendedPrivateKey =
-      //     derivedExtendedPrivateKey.derivePrivateChildKey(0, hardened: true);
-      // derivedChildKeyEncoded = derivedExtendedPrivateKey.toBase58String();
-      // expect(derivedChildKeyEncoded,
-      //     "xprv9ww7sMFVKxty8YzC4nKSgnUKNFM2uSybNoV24kC82UF9JJMgmZF61rNcd5J8M8d5DkxPLT79SgfSYwL6V8PRwNsgYYrRj2BM8eZ2nZEHrsi");
-      // encodedDerivedPublicKey = derivedExtendedPrivateKey.toBase58String(
-      //     version: int.parse("0488B21E", radix: 16));
-      // expect(encodedDerivedPublicKey,
-      //     "xpub6AvUGrnPALTGM34fAorT3vR3vHBXJuhSk2Qcs8bjaon8B6gqK6ZLZeh6UMqPaS6a4Q1fByzY74W5L8vB2XedwzhFVaiXW8ggTsuRBRm65ak");
-
-      // //m/0/0'/1'
-      // derivedExtendedPrivateKey =
-      //     derivedExtendedPrivateKey.derivePrivateChildKey(1, hardened: true);
-      // derivedChildKeyEncoded = derivedExtendedPrivateKey.toBase58String();
-      // expect(derivedChildKeyEncoded,
-      //     "xprv9zBKtvKGUq5YtLP837ucGn49nDbJAUKsEcsqwAy9uaocW1AsucBmU2SM4AGeC6nrU6b3j9vmRRcMfWFQkBf2C3mSLveBPZpxKRH5WZx1dGc");
-      // encodedDerivedPublicKey = derivedExtendedPrivateKey.toBase58String(
-      //     version: int.parse("0488B21E", radix: 16));
-      // expect(encodedDerivedPublicKey,
-      //     "xpub6DAgJRrAKCdr6pTb99ScduztLFRnZw3ibqoSjZNmTvLbNoW2T9W21pkpuR3qWHyFfLGL2VTuffBjBabRhRPwGu9KKXbkZ4Fd2tP2QPwZV13");
     });
 
     test("Test Wif", () {

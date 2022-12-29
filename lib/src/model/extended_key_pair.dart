@@ -3,7 +3,11 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:dart_crypto/dart_crypto.dart';
+import 'package:pointycastle/ecc/api.dart';
+import 'package:pointycastle/ecc/ecc_fp.dart' as ecc;
+import "package:pointycastle/ecc/curves/secp256k1.dart";
 import 'package:pointycastle/export.dart';
+import 'package:pointycastle/pointycastle.dart';
 
 class ExtendedPublicKey extends ExtendedKey {
   ExtendedPublicKey(ECPublicKey publicKey, Uint8List chainCode, int depth,
@@ -21,6 +25,25 @@ class ExtendedPublicKey extends ExtendedKey {
     buffer.setRange(13, 45, chainCode);
     buffer.setRange(45, 78, publicKey.Q!.getEncoded());
     return bs58check.encode(buffer);
+  }
+
+  //FromBase58String
+  factory ExtendedPublicKey.fromBase58String(String base58String,
+      {curve: 'secp256k1'}) {
+    var decoded = bs58check.decode(base58String);
+    //Unused
+    //var version = decoded.buffer.asByteData().getUint32(0);
+    var depth = decoded.buffer.asByteData().getUint8(4);
+    var parentFingerprint = decoded.buffer.asByteData().getUint32(5);
+    var index = decoded.buffer.asByteData().getUint32(9);
+    var chainCode = decoded.sublist(13, 45);
+    var publicKey = decoded.sublist(45, 78);
+
+    var params = ECDomainParameters(curve);
+    final Q = params.curve.decodePoint(publicKey);
+
+    return ExtendedPublicKey(
+        ECPublicKey(Q, params), chainCode, depth, index, parentFingerprint);
   }
 
   @override
@@ -84,6 +107,29 @@ class ExtendedPrivateKey extends ExtendedKey {
     bytes.setUint8(45, 0);
     buffer.setRange(46, 78, CryptoUtils.writeBigInt(privateKey.d!));
     return bs58check.encode(buffer);
+  }
+
+  factory ExtendedPrivateKey.fromBase58String(String base58String,
+      {curve: 'secp256k1'}) {
+    var decoded = bs58check.decode(base58String);
+    //Unused
+    //var version = decoded.buffer.asByteData().getUint32(0);
+    var depth = decoded.buffer.asByteData().getUint8(4);
+    var parentFingerprint = decoded.buffer.asByteData().getUint32(5);
+    var index = decoded.buffer.asByteData().getUint32(9);
+    var chainCode = decoded.sublist(13, 45);
+    var privateKey = decoded.sublist(46, 78);
+
+    var params = ECDomainParameters(curve);
+    final d = CryptoUtils.readBytes(privateKey);
+
+    return ExtendedPrivateKey(
+        ECPrivateKey(d, params),
+        ECPublicKey(params.G * d, params),
+        chainCode,
+        depth,
+        index,
+        parentFingerprint);
   }
 
   ExtendedPublicKey toNeuteredKey() {
