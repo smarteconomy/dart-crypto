@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:dart_crypto/src/model/mnemonic.dart';
 import 'package:dart_crypto/src/util/extensions.dart';
 import 'package:dart_crypto/src/util/crypto_utils.dart';
 import 'package:pointycastle/export.dart';

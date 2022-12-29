@@ -3,11 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:dart_crypto/dart_crypto.dart';
-import 'package:pointycastle/ecc/api.dart';
-import 'package:pointycastle/ecc/ecc_fp.dart' as ecc;
-import "package:pointycastle/ecc/curves/secp256k1.dart";
 import 'package:pointycastle/export.dart';
-import 'package:pointycastle/pointycastle.dart';
 
 class ExtendedPublicKey extends ExtendedKey {
   ExtendedPublicKey(ECPublicKey publicKey, Uint8List chainCode, int depth,
@@ -32,7 +28,7 @@ class ExtendedPublicKey extends ExtendedKey {
       {curve: 'secp256k1'}) {
     var decoded = bs58check.decode(base58String);
     //Unused
-    //var version = decoded.buffer.asByteData().getUint32(0);
+    var version = decoded.buffer.asByteData().getUint32(0);
     var depth = decoded.buffer.asByteData().getUint8(4);
     var parentFingerprint = decoded.buffer.asByteData().getUint32(5);
     var index = decoded.buffer.asByteData().getUint32(9);
