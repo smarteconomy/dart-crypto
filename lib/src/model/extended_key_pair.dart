@@ -24,7 +24,7 @@ class ExtendedPublicKey extends ExtendedKey {
   }
 
   @override
-  ExtendedPublicKey derivePublicChildKey(index) {
+  ExtendedPublicKey derivePublicKey(index) {
     final localPublicKey = publicKey.Q;
     final localParameters = publicKey.parameters;
 
@@ -34,8 +34,34 @@ class ExtendedPublicKey extends ExtendedKey {
       throw Exception("Invalid key for derivation");
     }
 
-    return ExtendedPublicKey(
-        publicKey, chainCode, depth + 1, index, parentFingerprint);
+    var hmac = Mac("SHA-512/HMAC");
+    hmac.init(KeyParameter(this.chainCode));
+    Uint8List inputData = Uint8List(37);
+    ByteData bytes = inputData.buffer.asByteData();
+    inputData.setRange(0, 33, localPublicKey.getEncoded(true));
+    bytes.setUint32(33, index);
+
+    final out = hmac.process(inputData);
+
+    var internalSeed = out.sublist(0, 32);
+    var chainCode = out.sublist(32, 64);
+
+    //Sums the private key with the internal seed
+    var derivedPublicKey =
+        localParameters.G * CryptoUtils.readBytes(internalSeed);
+    derivedPublicKey = derivedPublicKey! + localPublicKey;
+
+    var hexIdentifier = identifier();
+    var parentFingerprint = hexIdentifier.sublist(0, 4);
+
+    var newExtendedPrivateKey = ExtendedPublicKey(
+        ECPublicKey(derivedPublicKey, localParameters),
+        chainCode,
+        depth + 1,
+        index,
+        parentFingerprint.buffer.asByteData().getUint32(0));
+
+    return newExtendedPrivateKey;
   }
 }
 
@@ -65,19 +91,18 @@ class ExtendedPrivateKey extends ExtendedKey {
         publicKey, chainCode, depth, index, parentFingerprint);
   }
 
+  /*
+  * Private parent key → public child key
+  */
   @override
-  ExtendedPublicKey derivePublicChildKey(index) {
-    final localPublicKey = publicKey.Q;
-    final localParameters = publicKey.parameters;
-
-    if (localPublicKey == null || localParameters == null) {
-      throw Exception("Invalid key for derivation");
-    }
-
-    return ExtendedPublicKey(
-        publicKey, chainCode, depth + 1, index, parentFingerprint);
+  ExtendedPublicKey derivePublicKey(index) {
+    final derivedPublicKey = derivePrivateChildKey(index).toNeuteredKey();
+    return derivedPublicKey;
   }
 
+  /*
+  * Private parent key → private child key
+  */
   ExtendedPrivateKey derivePrivateChildKey(int index, {hardened = true}) {
     final localPrivateKey = this.privateKey.d;
     final localPublicKey = this.publicKey.Q;
@@ -170,7 +195,7 @@ abstract class ExtendedKey {
 
   String toBase58String({version = 76066276});
 
-  ExtendedPublicKey derivePublicChildKey(index);
+  ExtendedPublicKey derivePublicKey(index);
 
   Uint8List identifier() {
     var hash = SHA256Digest().process(publicKey.Q!.getEncoded());

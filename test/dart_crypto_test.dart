@@ -51,7 +51,13 @@ void main() {
       expect(
           "xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EGMcet8",
           neuteredRootKey.toBase58String());
+
+      final privateChildKey = extendedRootPrivateKey.derivePrivateChildKey(0);
+      final derivedPublicKey = extendedRootPrivateKey.derivePublicKey(0);
+      expect(privateChildKey.toNeuteredKey().toBase58String(),
+          derivedPublicKey.toBase58String());
     });
+
     test("Test Child Key Derivation", () {
       final seed = "000102030405060708090a0b0c0d0e0f".hexToBytes();
       //m/
