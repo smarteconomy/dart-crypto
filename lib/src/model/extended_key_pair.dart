@@ -113,13 +113,12 @@ class ExtendedPrivateKey extends ExtendedKey {
       {curve: 'secp256k1'}) {
     var decoded = bs58check.decode(base58String);
     //Unused
-    //var version = decoded.buffer.asByteData().getUint32(0);
+    var version = decoded.buffer.asByteData().getUint32(0);
     var depth = decoded.buffer.asByteData().getUint8(4);
     var parentFingerprint = decoded.buffer.asByteData().getUint32(5);
     var index = decoded.buffer.asByteData().getUint32(9);
     var chainCode = decoded.sublist(13, 45);
     var privateKey = decoded.sublist(46, 78);
-
     var params = ECDomainParameters(curve);
     final d = CryptoUtils.readBytes(privateKey);
 
@@ -212,7 +211,15 @@ abstract class ExtendedKey {
   final int index;
 
   ExtendedKey(this.publicKey, this.chainCode, this.depth, this.index,
-      this.parentFingerprint);
+      this.parentFingerprint) {
+    if (CryptoUtils.readBytes(chainCode).compareTo(BigInt.from(0)) == 0) {
+      throw Exception("Invalid Chain Code");
+    }
+
+    if (depth == 0 && parentFingerprint != 0) {
+      throw Exception("Invalid Parent Fingerprint");
+    }
+  }
 
   factory ExtendedKey.fromSeed(Uint8List seed,
       {int index = 0,

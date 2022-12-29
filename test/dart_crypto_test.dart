@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
@@ -99,6 +100,87 @@ void main() {
         expect(derivedKey.toBase58String(), xpriv);
         expect(derivedKey.toNeuteredKey().toBase58String(), xpub);
       }
+    });
+
+    test("Bip32 Test Vector5", () {
+      final vector1 =
+          "xpub661MyMwAqRbcEYS8w7XLSVeEsBXy79zSzH1J8vCdxAZningWLdN3zgtU6LBpB85b3D2yc8sfvZU521AAwdZafEz7mnzBBsz4wKY5fTtTQBm";
+      expect(() => ExtendedPublicKey.fromBase58String(vector1),
+          throwsArgumentError);
+
+      final vector2 =
+          "xprv9s21ZrQH143K24Mfq5zL5MhWK9hUhhGbd45hLXo2Pq2oqzMMo63oStZzFGTQQD3dC4H2D5GBj7vWvSQaaBv5cxi9gafk7NF3pnBju6dwKvH";
+      expect(
+          () => ExtendedPrivateKey.fromBase58String(vector2), throwsException);
+
+      final vector3 =
+          "xpub661MyMwAqRbcEYS8w7XLSVeEsBXy79zSzH1J8vCdxAZningWLdN3zgtU6Txnt3siSujt9RCVYsx4qHZGc62TG4McvMGcAUjeuwZdduYEvFn";
+      expect(() => ExtendedPublicKey.fromBase58String(vector3),
+          throwsArgumentError);
+
+      final vector4 =
+          "xprv9s21ZrQH143K24Mfq5zL5MhWK9hUhhGbd45hLXo2Pq2oqzMMo63oStZzFGpWnsj83BHtEy5Zt8CcDr1UiRXuWCmTQLxEK9vbz5gPstX92JQ";
+      expect(
+          () => ExtendedPrivateKey.fromBase58String(vector4), throwsException);
+
+      final vector5 =
+          "xpub661MyMwAqRbcEYS8w7XLSVeEsBXy79zSzH1J8vCdxAZningWLdN3zgtU6N8ZMMXctdiCjxTNq964yKkwrkBJJwpzZS4HS2fxvyYUA4q2Xe4";
+      expect(() => ExtendedPublicKey.fromBase58String(vector5),
+          throwsArgumentError);
+
+      final vector6 =
+          "xprv9s21ZrQH143K24Mfq5zL5MhWK9hUhhGbd45hLXo2Pq2oqzMMo63oStZzFAzHGBP2UuGCqWLTAPLcMtD9y5gkZ6Eq3Rjuahrv17fEQ3Qen6J";
+      expect(
+          () => ExtendedPrivateKey.fromBase58String(vector6), throwsException);
+
+      final vector7 =
+          "xprv9s2SPatNQ9Vc6GTbVMFPFo7jsaZySyzk7L8n2uqKXJen3KUmvQNTuLh3fhZMBoG3G4ZW1N2kZuHEPY53qmbZzCHshoQnNf4GvELZfqTUrcv";
+      expect(
+          () => ExtendedPrivateKey.fromBase58String(vector7), throwsException);
+
+      final vector8 =
+          "xpub661no6RGEX3uJkY4bNnPcw4URcQTrSibUZ4NqJEw5eBkv7ovTwgiT91XX27VbEXGENhYRCf7hyEbWrR3FewATdCEebj6znwMfQkhRYHRLpJ";
+
+      expect(
+          () => ExtendedPublicKey.fromBase58String(vector8), throwsException);
+
+      final vector9 =
+          "xprv9s21ZrQH4r4TsiLvyLXqM9P7k1K3EYhA1kkD6xuquB5i39AU8KF42acDyL3qsDbU9NmZn6MsGSUYZEsuoePmjzsB3eFKSUEh3Gu1N3cqVUN";
+
+      expect(
+          () => ExtendedPrivateKey.fromBase58String(vector9), throwsException);
+
+      final vector10 =
+          "xpub661MyMwAuDcm6CRQ5N4qiHKrJ39Xe1R1NyfouMKTTWcguwVcfrZJaNvhpebzGerh7gucBvzEQWRugZDuDXjNDRmXzSZe4c7mnTK97pTvGS8";
+
+      expect(
+          () => ExtendedPublicKey.fromBase58String(vector10), throwsException);
+
+      final vector11 =
+          "DMwo58pR1QLEFihHiXPVykYB6fJmsTeHvyTp7hRThAtCX8CvYzgPcn8XnmdfHGMQzT7ayAmfo4z3gY5KfbrZWZ6St24UVf2Qgo6oujFktLHdHY4";
+      expect(() => ExtendedPublicKey.fromBase58String(vector11),
+          throwsArgumentError);
+      expect(
+          () => ExtendedPrivateKey.fromBase58String(vector11), throwsException);
+      final vector12 =
+          "DMwo58pR1QLEFihHiXPVykYB6fJmsTeHvyTp7hRThAtCX8CvYzgPcn8XnmdfHPmHJiEDXkTiJTVV9rHEBUem2mwVbbNfvT2MTcAqj3nesx8uBf9";
+
+      expect(
+          () => ExtendedPublicKey.fromBase58String(vector12), throwsException);
+      expect(
+          () => ExtendedPrivateKey.fromBase58String(vector12), throwsException);
+
+      final vector13 =
+          "xprv9s21ZrQH143K24Mfq5zL5MhWK9hUhhGbd45hLXo2Pq2oqzMMo63oStZzF93Y5wvzdUayhgkkFoicQZcP3y52uPPxFnfoLZB21Teqt1VvEHx";
+
+      expect(
+          () => ExtendedPrivateKey.fromBase58String(vector13), throwsException);
+
+      final vector14 =
+          "xprv9s21ZrQH143K24Mfq5zL5MhWK9hUhhGbd45hLXo2Pq2oqzMMo63oStZzFAzHGBP2UuGCqWLTAPLcMtD5SDKr24z3aiUvKr9bJpdrcLg1y3G";
+
+      expect(
+          () => ExtendedPrivateKey.fromBase58String(vector14), throwsException);
     });
 
     test("Base58 Public Key Decode Tests", () {
