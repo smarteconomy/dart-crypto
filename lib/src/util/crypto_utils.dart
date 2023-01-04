@@ -46,7 +46,7 @@ class CryptoUtils {
     final rng = Random.secure();
     final bytes = Uint8List(size);
     for (var i = 0; i < size; i++) {
-      bytes[i] = rng.nextInt(8);
+      bytes[i] = rng.nextInt(256);
     }
     return bytes;
   }

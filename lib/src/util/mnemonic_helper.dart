@@ -11,6 +11,7 @@ class MnemonicHelper {
     final strength = (wordCount * 11) - (wordCount ~/ 3);
     final entropySize = strength ~/ 8;
     final randomEntropy = CryptoUtils.generateRandomBytes(entropySize);
+    print(randomEntropy.toHexString());
     final keywords = entropyToMnemonic(randomEntropy);
     return keywords;
   }
