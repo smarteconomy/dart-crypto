@@ -6,7 +6,7 @@ import 'package:dart_crypto/dart_crypto.dart';
 class MnemonicWallet {
   final String keywords;
   final Uint8List seed;
-  final ExtendedKey rootKeyPair;
+  final ExtendedPrivateKey rootKeyPair;
 
   MnemonicWallet(this.keywords, this.seed, this.rootKeyPair);
 
@@ -14,13 +14,15 @@ class MnemonicWallet {
     final randomMnemonic =
         MnemonicHelper.generateMnemonicKeywords(wordCount: wordCount);
     final seed = MnemonicHelper.mnemonicToSeed(randomMnemonic);
-    final rootKeyPair = ExtendedKey.fromSeed(seed, curve: curve);
+    final rootKeyPair =
+        ExtendedKey.fromSeed(seed, curve: curve) as ExtendedPrivateKey;
     return MnemonicWallet(randomMnemonic, seed, rootKeyPair);
   }
 
   factory MnemonicWallet.fromMnemonic(String mnemonic, {curve = 'secp256k1'}) {
     final seed = MnemonicHelper.mnemonicToSeed(mnemonic);
-    final rootKeyPair = ExtendedKey.fromSeed(seed, curve: curve);
+    final rootKeyPair =
+        ExtendedKey.fromSeed(seed, curve: curve) as ExtendedPrivateKey;
     return MnemonicWallet(mnemonic, seed, rootKeyPair);
   }
 
